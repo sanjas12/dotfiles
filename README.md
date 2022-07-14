@@ -1,4 +1,4 @@
-## Сборник настроечных файлов для разных программ
+## sanjas12 dotfiles-windows
 ## Contents
 
 What's in there?
