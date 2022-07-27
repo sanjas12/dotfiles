@@ -1,6 +1,16 @@
-code --install-extension ecmel.vscode-html-css
+# for golang
 code --install-extension golang.go
+
+# for web
+code --install-extension ecmel.vscode-html-css
+
+# theme and hotkey
 code --install-extension k--kato.intellij-idea-keybindings
-code --install-extension ms-python.python
 code --install-extension PKief.material-icon-theme
 
+# for python
+code --install-extension ms-python.python
+code --install-extension ms-python.vscode-pylance
+code --install-extension ms-toolsai.jupyter
+code --install-extension ms-toolsai.jupyter-keymap
+code --install-extension ms-toolsai.jupyter-renderers
