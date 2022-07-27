@@ -1,0 +1,11 @@
+{
+    "workbench.editor.untitled.hint": "hidden",
+    "editor.fontSize": 20,
+    "jupyter.interactiveWindowMode": "perFile",
+    "workbench.iconTheme": "material-icon-theme",
+    "terminal.integrated.fontSize": 20,
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.suggestSmartCommit": false,
+    "files.autoSave": "afterDelay",
+}
