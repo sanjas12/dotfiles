@@ -2,6 +2,6 @@
 	name = sanja
 	email = sanja100v@gmail.com
 [diff]
-  indentHeuristic = on
-  noprefix = true
-  colorMoved = default
+	indentHeuristic = on
+	noprefix = true
+	colorMoved = default
