@@ -3,5 +3,3 @@
 
 - copy settings.json to   (windows)
 - copy settings.json to   (linux)
-
-
