@@ -1,2 +1,2 @@
 .gitignore add to 
-.gitconfig copy to %USERNAME%(Windows)
+.gitconfig copy to ~/.gitconfig (Windows - Powershall)
