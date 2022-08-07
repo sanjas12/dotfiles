@@ -1,5 +1,7 @@
-## sanjas12 dotfiles-for vscode
+## sanjas12 dotfiles-for GIT
 ## Contents
 
-.gitignore copy to ~/.gitconfig (Windows - Bash)
-.gitconfig copy to ~/.gitconfig (Windows - Powershall)
+.gitignore copy to root project's folder
+
+.gitconfig copy to ~/.gitconfig (this is --global config)
+
