@@ -9,7 +9,7 @@ code --install-extension k--kato.intellij-idea-keybindings
 code --install-extension PKief.material-icon-theme
 
 # git
-code --install-extension GitLens
+code --install-extension eamodio.gitlens
 
 # for python
 code --install-extension ms-python.python
