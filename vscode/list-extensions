@@ -8,6 +8,9 @@ code --install-extension ecmel.vscode-html-css
 code --install-extension k--kato.intellij-idea-keybindings
 code --install-extension PKief.material-icon-theme
 
+# git
+code --install-extension GitLens
+
 # for python
 code --install-extension ms-python.python
 code --install-extension ms-python.vscode-pylance
