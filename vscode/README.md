@@ -1,8 +1,11 @@
 ## sanjas12 dotfiles-for vscode
 ## Contents
 
-- copy settings.json to ~\AppData\Roaming\Code\User\  (windows)
+git clone https://github.com/sanjas12/dotfiles.git
+cd dotfiles\vscode
+
+- copy settings.json to $HOME\AppData\Roaming\Code\User\  (windows 11)
 	use copy_set_win.bat file
-- copy keybindings.json to ~/AppData/Roaming/Code/User/ (windows)
+- copy keybindings.json to ~\AppData\Roaming\Code\User\ (windows)
 
 - copy settings.json to   (linux)
