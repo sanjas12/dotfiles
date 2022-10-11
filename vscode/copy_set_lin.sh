@@ -1,3 +1,3 @@
 cd ~/dotfiles/vscode
-chmod 777 copy_set_lin.sh
-cp .settings.json ~/
+# chmod 777 copy_set_lin.sh
+cp ./settings.json ~/
