@@ -9,11 +9,15 @@ code --install-extension k--kato.intellij-idea-keybindings
 code --install-extension PKief.material-icon-theme
 
 # git
-code --install-extension eamodio.gitlens
+<!-- code --install-extension eamodio.gitlens -->
+code --install-extension donjayamanne.githistory
 
 # for python
+                            # Extension ID
 code --install-extension ms-python.python
 code --install-extension ms-python.vscode-pylance
 code --install-extension ms-toolsai.jupyter
 code --install-extension ms-toolsai.jupyter-keymap
 code --install-extension ms-toolsai.jupyter-renderers
+
+
