@@ -20,4 +20,6 @@ code --install-extension ms-toolsai.jupyter
 code --install-extension ms-toolsai.jupyter-keymap
 code --install-extension ms-toolsai.jupyter-renderers
 
-
+# for ssh
+                            # Extension ID
+code --install-extension ms-vscode-remote.remote-ssh
