@@ -7,5 +7,8 @@
     "git.enableSmartCommit": true,
     "git.suggestSmartCommit": false,
     "files.autoSave": "afterDelay",
-    "terminal.integrated.defaultProfile.windows": "Git Bash"
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "remote.SSH.remotePlatform": {
+        "92.63.104.85": "linux"
+    }
 }
