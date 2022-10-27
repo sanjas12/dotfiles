@@ -27,5 +27,6 @@ code --install-extension ms-vscode-remote.remote-ssh
 # for sql
                             # Extension ID
 code --install-extension mtxr.sqltools
+code --install-extension mtxr.sqltools-driver-mysql
 
 
