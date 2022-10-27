@@ -23,3 +23,9 @@ code --install-extension ms-toolsai.jupyter-renderers
 # for ssh
                             # Extension ID
 code --install-extension ms-vscode-remote.remote-ssh
+
+# for sql
+                            # Extension ID
+code --install-extension mtxr.sqltools
+
+
