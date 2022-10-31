@@ -43,3 +43,7 @@ Package Control.cache/
 #### custom ####
 WakaTime.sublime-settings
 .vscode/tags
+
+
+#### Python ####
+__pycache__
