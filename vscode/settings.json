@@ -1,5 +1,5 @@
 {
-    "editor.fontSize": 20,
+    "editor.fontSize": 18,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.colorTheme": "Default Dark+",
     "terminal.integrated.fontSize": 20,
@@ -13,5 +13,9 @@
     },
     "python.venvFolders": [
         "D:\\PythonVenv"
+    ],
+    "go.toolsManagement.autoUpdate": true,
+    "git.branchProtection": [
+        "main"
     ]
 }
