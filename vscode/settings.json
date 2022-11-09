@@ -16,6 +16,7 @@
     ],
     "go.toolsManagement.autoUpdate": true,
     "git.branchProtection": [
-        "main"
+        "main",
+        "master"
     ]
 }
