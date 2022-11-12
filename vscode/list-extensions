@@ -3,6 +3,7 @@ code --install-extension golang.go
 
 # for web
 code --install-extension ecmel.vscode-html-css
+code --install-extension george-alisson.html-preview-vscode   
 
 # theme and hotkey
 code --install-extension k--kato.intellij-idea-keybindings
