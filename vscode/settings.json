@@ -18,5 +18,6 @@
     "git.branchProtection": [
         "main",
         "master"
-    ]
+    ],
+    "editor.mouseWheelZoom": true
 }
