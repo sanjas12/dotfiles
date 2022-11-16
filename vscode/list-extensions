@@ -20,6 +20,7 @@ code --install-extension ms-python.vscode-pylance
 code --install-extension ms-toolsai.jupyter
 code --install-extension ms-toolsai.jupyter-keymap
 code --install-extension ms-toolsai.jupyter-renderers
+code --install-extension nizami.update-python-packages-and-requirements-txt
 
 # for ssh
                             # Extension ID
