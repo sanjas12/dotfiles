@@ -12,6 +12,7 @@ code --install-extension PKief.material-icon-theme
 # git
 <!-- code --install-extension eamodio.gitlens -->
 code --install-extension donjayamanne.githistory
+code --install-extension mhutchie.git-graph
 
 # for python
                             # Extension ID
