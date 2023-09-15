@@ -14,6 +14,9 @@ code --install-extension PKief.material-icon-theme
 code --install-extension donjayamanne.githistory
 code --install-extension mhutchie.git-graph
 
+# project templates
+code --install-extension donjayamanne.githistory
+
 # for python
                             # Extension ID
 code --install-extension ms-python.python
