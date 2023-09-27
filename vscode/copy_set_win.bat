@@ -6,3 +6,6 @@ powershell -Command Copy-Item .\settings.json $HOME\AppData\Roaming\Code\User\
 
 @REM шаблоны для проектов по умолчанию
 powershell -Command Copy-Item .\ProjectTemplates ~\AppData\Roaming\Code\User -force -recurse
+
+@REM snippets
+powershell -Command Copy-Item .\snippets ~\AppData\Roaming\Code\User -force -recurse
