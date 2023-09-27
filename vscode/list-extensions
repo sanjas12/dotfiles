@@ -27,6 +27,8 @@ code --install-extension ms-toolsai.jupyter-renderers
 code --install-extension nizami.update-python-packages-and-requirements-txt
 code --install-extension twixes.pypi-assistant
 code --install-extension frhtylcn.pythonsnippets
+                            # Qt
+code --install-extension seanwu.vscode-qt-for-python
 
 # for ssh
                             # Extension ID
