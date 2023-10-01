@@ -1,4 +1,5 @@
-﻿powershell -Command Copy-Item .\keybindings.json $HOME\AppData\Roaming\Code\User\  
+﻿@REM hot key
+powershell -Command Copy-Item .\keybindings.json $HOME\AppData\Roaming\Code\User\
  
 @REM  copy ./keybindings.json $HOME/AppData/Roaming/Code/User/
 
