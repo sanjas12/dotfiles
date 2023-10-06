@@ -6,7 +6,7 @@ code --install-extension ecmel.vscode-html-css
 code --install-extension george-alisson.html-preview-vscode   
 
 # theme and hotkey
-code --install-extension k--kato.intellij-idea-keybindings
+<!-- code --install-extension k--kato.intellij-idea-keybindings -->
 code --install-extension PKief.material-icon-theme
 
 # git
@@ -15,7 +15,7 @@ code --install-extension donjayamanne.githistory
 code --install-extension mhutchie.git-graph
 
 # project templates
-code --install-extension donjayamanne.githistory
+code --install-extension donjayamanne.cantonios.project-templates
 
 # for python
                             # Extension ID
