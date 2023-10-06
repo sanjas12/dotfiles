@@ -24,7 +24,7 @@ code --install-extension ms-python.vscode-pylance
 code --install-extension ms-toolsai.jupyter
 code --install-extension ms-toolsai.jupyter-keymap
 code --install-extension ms-toolsai.jupyter-renderers
-<!-- code --install-extension nizami.update-python-packages-and-requirements-txt -->
+code --install-extension nizami.update-python-packages-and-requirements-txt
 code --install-extension twixes.pypi-assistant
 code --install-extension frhtylcn.pythonsnippets
                             # Qt
@@ -33,7 +33,6 @@ code --install-extension seanwu.vscode-qt-for-python
 # for ssh
                             # Extension ID
 code --install-extension ms-vscode-remote.remote-ssh
-code --install-extension ms-vscode.remote-explorer
 
 # for sql
                             # Extension ID
