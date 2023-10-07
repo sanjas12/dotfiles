@@ -20,7 +20,6 @@ code --install-extension donjayamanne.cantonios.project-templates
 # for python
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
-code --install-extension twixes.pypi-assistant
 code --install-extension frhtylcn.pythonsnippets
                             # Qt
 code --install-extension seanwu.vscode-qt-for-python
