@@ -18,7 +18,6 @@ code --install-extension mhutchie.git-graph
 code --install-extension donjayamanne.cantonios.project-templates
 
 # for python
-                            # Extension ID
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
 code --install-extension twixes.pypi-assistant
@@ -27,12 +26,8 @@ code --install-extension frhtylcn.pythonsnippets
 code --install-extension seanwu.vscode-qt-for-python
 
 # for ssh
-                            # Extension ID
 code --install-extension ms-vscode-remote.remote-ssh
 
 # for sql
-                            # Extension ID
 code --install-extension mtxr.sqltools
 code --install-extension mtxr.sqltools-driver-mysql
-
-
