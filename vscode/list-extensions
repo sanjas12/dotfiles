@@ -15,7 +15,7 @@ code --install-extension donjayamanne.githistory
 code --install-extension mhutchie.git-graph
 
 # project templates
-code --install-extension donjayamanne.cantonios.project-templates
+code --install-extension cantonios.project-templates
 
 # for python
 code --install-extension ms-python.python
