@@ -6,6 +6,7 @@
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "git.suggestSmartCommit": false,
+    "git.followTagsWhenSync": true,
     "files.autoSave": "afterDelay",
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "remote.SSH.remotePlatform": {
