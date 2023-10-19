@@ -11,6 +11,7 @@ code --install-extension PKief.material-icon-theme
 
 # git
 <!-- code --install-extension eamodio.gitlens -->
+
 code --install-extension donjayamanne.githistory
 code --install-extension mhutchie.git-graph
 
@@ -23,6 +24,9 @@ code --install-extension ms-toolsai.jupyter
 code --install-extension frhtylcn.pythonsnippets
                             # Qt
 code --install-extension seanwu.vscode-qt-for-python
+
+# todo
+code --install-extension Gruntfuggly.todo-tree
 
 # for ssh
 code --install-extension ms-vscode-remote.remote-ssh
