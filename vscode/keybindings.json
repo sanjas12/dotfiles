@@ -47,5 +47,9 @@
         "key": "alt+down",
         "command": "-editor.action.moveLinesDownAction",
         "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "git-graph.view"
     }
 ]
