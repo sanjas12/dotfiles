@@ -10,7 +10,7 @@
     "files.autoSave": "afterDelay",
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "remote.SSH.remotePlatform": {
-        "92.63.104.85": "linux"
+        "82.146.47.129": "linux"
     },
     "python.venvFolders": [
         "D:\\PythonVenv"
