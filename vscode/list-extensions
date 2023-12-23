@@ -37,3 +37,7 @@ code --install-extension mtxr.sqltools-driver-mysql
 
 # for sqlite
 code --install-extension alexcvzz.vscode-sqlite
+
+# for makefile
+code --install-extension ms-vscode.makefile-tools
+
