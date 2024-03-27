@@ -15,6 +15,7 @@
     "python.venvFolders": [
         "D:\\PythonVenv"
     ],
+    "python.analysis.typeCheckingMode":"strict",
     "go.toolsManagement.autoUpdate": true,
     "git.branchProtection": [
         "main",
