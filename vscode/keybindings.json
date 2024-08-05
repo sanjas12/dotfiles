@@ -59,5 +59,15 @@
     {
         "key": "ctrl+alt+e",
         "command": "workbench.action.minimizeOtherEditorsHideSidebar"
+    },
+    {
+        "key": "ctrl+'",
+        "command": "workbench.action.debug.run",
+        "when": "debuggersAvailable && debugState != 'initializing'"
+    },
+    {
+        "key": "ctrl+f5",
+        "command": "-workbench.action.debug.run",
+        "when": "debuggersAvailable && debugState != 'initializing'"
     }
 ]
