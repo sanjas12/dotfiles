@@ -9,6 +9,15 @@
     "git.followTagsWhenSync": true,
     "files.autoSave": "afterDelay",
     "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": {
+            "source": "Git Bash",
+            "env": {
+                "LANG": "C.UTF-8"
+            },
+            "args": ["-c","chcp.com 65001;bash"]
+        }
+    },
     "remote.SSH.remotePlatform": {
         "82.146.47.129": "linux"
     },
