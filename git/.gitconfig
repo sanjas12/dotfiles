@@ -1,0 +1,11 @@
+[user]
+	name = sanja_s
+	email = sanja100v@gmail.com
+[diff]
+	indentHeuristic = on
+	noprefix = true
+	colorMoved = default
+[core]
+	autocrlf = input
+[help]
+	autoCorrect = 1

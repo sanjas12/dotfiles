@@ -1,0 +1,97 @@
+{
+    "editor.fontSize": 16,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Default Dark+",
+    "terminal.integrated.fontSize": 16,
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.suggestSmartCommit": false,
+    "git.followTagsWhenSync": true,
+    "files.autoSave": "afterDelay",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": {
+            "source": "Git Bash",
+            "env": {
+                "LANG": "C.UTF-8"
+            },
+            "args": ["-c","chcp.com 65001;bash"]
+        }
+    },
+    "remote.SSH.remotePlatform": {
+        "82.146.47.129": "linux"
+    },
+    "python.venvFolders": [
+        "D:\\PythonVenv"
+    ],
+    "python.analysis.typeCheckingMode":"strict",
+    "go.toolsManagement.autoUpdate": true,
+    "git.branchProtection": [
+        "main",
+        "master"
+    ],
+    "editor.mouseWheelZoom": true,
+    "notebook.markup.fontSize": 12,
+     "todo-tree.highlights.defaultHighlight": {
+        "icon": "alert",
+        "type": "text",
+        "foreground": "red",
+        "background": "white",
+        "opacity": 50,
+        "iconColour": "blue"
+    },
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "check",
+            "foreground": "black",
+            "background": "white",
+            "iconColour": "white",
+        },
+        "NOTE": {
+            "icon": "note",
+            "foreground": "white",
+            "background": "gray",
+            "iconColour": "gray",
+        },
+        "COMMENT": {
+            "icon": "note",
+            "foreground": "white",
+            "background": "gray",
+            "iconColour": "gray",
+        },
+        "FIXME": {
+            "foreground": "black",
+            "background": "yellow",
+            "iconColour": "yellow",
+        },
+        "BUG": {
+            "foreground": "black",
+            "background": "red",
+            "iconColour": "red",
+        },
+        "[ ]": {
+            "icon": "check",
+            "foreground": "black",
+            "background": "white",
+            "iconColour": "yellow",
+        },
+        "[x]": {
+            "icon": "check",
+            "foreground": "white",
+            "background": "green",
+            "iconColour": "green",
+        }
+    },
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "NOTE",
+        "COMMENT",
+        "[ ]",
+        "[x]"
+    ],
+    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS).*(\\n\\s*//\\s{2,}.*)*",
+
+}

@@ -1,0 +1,53 @@
+# for golang
+code --install-extension golang.go
+
+# for web
+code --install-extension ecmel.vscode-html-css
+code --install-extension george-alisson.html-preview-vscode   
+
+# theme and hotkey
+<!-- code --install-extension k--kato.intellij-idea-keybindings -->
+code --install-extension PKief.material-icon-theme
+
+# git
+<!-- code --install-extension eamodio.gitlens -->
+
+code --install-extension donjayamanne.githistory
+code --install-extension mhutchie.git-graph
+
+# project templates
+code --install-extension cantonios.project-templates
+
+# for python
+code --install-extension ms-python.python
+code --install-extension ms-toolsai.jupyter
+code --install-extension frhtylcn.pythonsnippets
+                            # Qt
+code --install-extension seanwu.vscode-qt-for-python
+
+# todo
+code --install-extension Gruntfuggly.todo-tree
+
+# for ssh
+code --install-extension ms-vscode-remote.remote-ssh
+
+# for sql
+code --install-extension mtxr.sqltools
+code --install-extension mtxr.sqltools-driver-mysql
+
+# for sqlite
+code --install-extension alexcvzz.vscode-sqlite
+
+# for makefile
+code --install-extension ms-vscode.makefile-tools
+
+# for java
+code --install-extension redhat.java
+code --install-extension visualstudioexptteam.intellicode-api-usage-examples
+code --install-extension visualstudioexptteam.vscodeintellicode
+code --install-extension vscjava.vscode-java-debug
+code --install-extension vscjava.vscode-java-dependency
+code --install-extension vscjava.vscode-java-pack
+code --install-extension vscjava.vscode-java-test
+code --install-extension vscjava.vscode-maven
+code --install-extension vscjava.vscode-gradle
