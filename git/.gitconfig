@@ -9,3 +9,6 @@
 	autocrlf = input
 [help]
 	autoCorrect = 1
+[alias]
+	st = status
+	lg = log --oneline --graph --decorate --all
