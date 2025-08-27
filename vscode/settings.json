@@ -95,5 +95,7 @@
     "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS).*(\\n\\s*//\\s{2,}.*)*",
     "workbench.editor.empty.hint": "hidden",
     "workbench.sideBar.location": "right",
+    "workbench.editor.showTabs": "single",
+    "workbench.editor.showIcons": false,
 
 }
