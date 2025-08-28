@@ -2,7 +2,7 @@
     "editor.fontSize": 16,
     "workbench.iconTheme": "material-icon-theme",
     "workbench.colorTheme": "Default Dark+",
-    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.fontSize": 14,
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "git.suggestSmartCommit": false,
@@ -97,5 +97,16 @@
     "workbench.sideBar.location": "right",
     "workbench.editor.showTabs": "single",
     "workbench.editor.showIcons": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "codeWebChat.promptTemplatesForEditContext": [
+        {
+            "template": "Проведи ревью кода.  Нужен акцент на: читаемости и стиле кода (PEP8), избавлении от дублирования, поиск ошибок, улучшении типизации. Ответ на русском",
+            "name": "review"
+        },
+        {
+            "template": "Нужно: 1. Объяснить, что делает каждый класс, метод и функция. 2. Разобрать логику работы пошагово (line-by-line или блоками). 3. Показать, как данные проходят через код (поток данных). 4. Указать зависимости на другие модули, библиотеки или внешние ресурсы. 5. Привести примеры входных и выходных данных для методов и функций, если возможно. 6. Отметить потенциальные подводные камни, баги или неочевидные места. 7. Дать рекомендации по улучшению читаемости и понимания кода, если есть.  Отвечай детально, чтобы я полностью понял логику кода.",
+            "name": "learn"
+        }
+    ],
 
 }
