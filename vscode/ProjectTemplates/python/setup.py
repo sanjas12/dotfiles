@@ -43,6 +43,8 @@ build_exe_options = {
     ],
     "optimize": 0, # c 2 - 477 Mb (3.11), c 1 или 0 - 175 Mb (3.11) 
     "include_files": include_files,
+    "zip_include_packages": ["*"],
+    "zip_exclude_packages": [],
 }
 
 
