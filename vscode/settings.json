@@ -108,5 +108,9 @@
             "name": "learn"
         }
     ],
+    
+    "chat.agent.enabled": false,
+    "chat.commandCenter.enabled": false,
+    "chat.disableAIFeatures": true,
 
 }

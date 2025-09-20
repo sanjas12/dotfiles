@@ -6,12 +6,9 @@ code --install-extension ecmel.vscode-html-css
 code --install-extension george-alisson.html-preview-vscode   
 
 # theme and hotkey
-<!-- code --install-extension k--kato.intellij-idea-keybindings -->
 code --install-extension PKief.material-icon-theme
 
 # git
-<!-- code --install-extension eamodio.gitlens -->
-
 code --install-extension donjayamanne.githistory
 code --install-extension mhutchie.git-graph
 
@@ -21,8 +18,8 @@ code --install-extension cantonios.project-templates
 # for python
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
-code --install-extension frhtylcn.pythonsnippets
-                            # Qt
+
+# Qt
 code --install-extension seanwu.vscode-qt-for-python
 
 # todo
@@ -36,7 +33,7 @@ code --install-extension mtxr.sqltools
 code --install-extension mtxr.sqltools-driver-mysql
 
 # for sqlite
-code --install-extension alexcvzz.vscode-sqlite
+code --install-extension .vscode-sqlite
 
 # for makefile
 code --install-extension ms-vscode.makefile-tools
@@ -59,26 +56,17 @@ code --install-extension robertpiosik.gemini-coder
 # file - tree
 code --install-extension shinotatwu-ds.file-tree-generator
 
+# csv
+code --install-extension mechatroner.rainbow-csv
 
-
-ahmadawais.shades-of-purple
-alexcvzz.vscode-sqlite
 blackboxapp.blackbox
 blackboxapp.blackboxagent
 cantonios.project-templates
 donjayamanne.githistory
 esbenp.prettier-vscode
 frhtylcn.pythonsnippets
-github.copilot
-github.copilot-chat
-gruntfuggly.todo-tree
-mechatroner.rainbow-csv
-mhutchie.git-graph
-moocfi.test-my-code
-ms-python.autopep8
 ms-python.black-formatter
 ms-python.debugpy
-ms-python.pylint
 ms-python.python
 ms-python.vscode-pylance
 ms-python.vscode-python-envs
