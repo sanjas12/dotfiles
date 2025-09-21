@@ -1,13 +1,20 @@
 {
     "editor.fontSize": 16,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+
+    "editor.mouseWheelZoom": true,
+
     "workbench.iconTheme": "material-icon-theme",
     "workbench.colorTheme": "Default Dark+",
-    "terminal.integrated.fontSize": 14,
-    "git.autofetch": true,
-    "git.enableSmartCommit": true,
-    "git.suggestSmartCommit": false,
-    "git.followTagsWhenSync": true,
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.sideBar.location": "right",
+    "workbench.editor.showTabs": "single",
+    "workbench.editor.showIcons": false,
+
     "files.autoSave": "afterDelay",
+    
+    // Terminal:
+    "terminal.integrated.fontSize": 14,
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "terminal.integrated.profiles.windows": {
         "Git Bash": {
@@ -18,19 +25,24 @@
             "args": ["-c","chcp.com 65001;bash"]
         }
     },
+    
+    // Tools, extensions, and languages:
     "remote.SSH.remotePlatform": {
         "82.146.47.129": "linux"
     },
-    "python.venvFolders": [
-        "D:\\PythonVenv"
-    ],
-    "python.analysis.typeCheckingMode":"strict",
-    "go.toolsManagement.autoUpdate": true,
-    "git.branchProtection": [
+
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.suggestSmartCommit": false,
+    "git.followTagsWhenSync": true,
+        "git.branchProtection": [
         "main",
         "master"
     ],
-    "editor.mouseWheelZoom": true,
+
+    "python.analysis.typeCheckingMode":"strict",
+    "go.toolsManagement.autoUpdate": true,
+
     "notebook.markup.fontSize": 12,
      "todo-tree.highlights.defaultHighlight": {
         "icon": "alert",
@@ -93,11 +105,7 @@
         "[x]"
     ],
     "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS).*(\\n\\s*//\\s{2,}.*)*",
-    "workbench.editor.empty.hint": "hidden",
-    "workbench.sideBar.location": "right",
-    "workbench.editor.showTabs": "single",
-    "workbench.editor.showIcons": false,
-    "editor.unicodeHighlight.invisibleCharacters": false,
+
     "codeWebChat.promptTemplatesForEditContext": [
         {
             "template": "Проведи ревью кода.  Нужен акцент на: читаемости и стиле кода (PEP8), избавлении от дублирования, поиск ошибок, улучшении типизации. Ответ на русском",
@@ -112,5 +120,7 @@
     "chat.agent.enabled": false,
     "chat.commandCenter.enabled": false,
     "chat.disableAIFeatures": true,
+
+    "commitSage.provider.type": "codestral",
 
 }
