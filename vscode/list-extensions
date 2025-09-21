@@ -50,7 +50,7 @@ code --install-extension vscjava.vscode-maven
 code --install-extension vscjava.vscode-gradle
 
 # chatgpt
-code --install-extension blackboxapp.blackbox
+code --install-extension vizzletf.geminicommit
 code --install-extension robertpiosik.gemini-coder
 
 # file - tree
