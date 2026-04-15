@@ -1,0 +1,29 @@
+tg_naladka
+ ┣ bugs
+ ┃ ┣ bug-006.md
+ ┣ Documentation
+ ┃ ┗ RelNote
+ ┃ ┃ ┗ 0.3.0.txt
+ ┣ input
+ ┃ ┣ bruk
+ ┃ ┃ ┗ ТГ22 2020-08-18 105117_2.csv.gz
+ ┃ ┣ qp.txt
+ ┃ ┣ test+ms.csv.gz
+ ┃ ┗ test.csv.gz
+ ┣ scripts
+ ┃ ┣ toexe.sh
+ ┃ ┗ venv_pip.sh
+ ┣ src
+ ┃ ┣ config
+ ┃ ┃ ┗ config.py
+ ┃ ┣ logic
+ ┃ ┃ ┣ logic.py
+ ┃ ┃ ┗ regulator_analyzer.py
+ ┃ ┣ model
+ ┃ ┃ ┗ basemodel.py
+ ┃ ┣ ui
+ ┃ ┃ ┣ graph_matplot.py
+ ┃ ┃ ┗ MainWindowUI.py
+ ┃ ┗ main.py
+ ┣ pyproject.toml
+ ┣ setup.py
