@@ -11,4 +11,6 @@
 	autoCorrect = 1
 [alias]
 	st = status
-	lg = log --oneline --graph --decorate --all
+	lg = log --oneline --graph --decorate --all \
+  --date=format:'%Y-%m-%d %H:%M:%S' \
+  --pretty=format:'%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(auto)%d%C(reset) %s'
