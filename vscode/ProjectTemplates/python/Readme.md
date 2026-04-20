@@ -1,13 +1,27 @@
 # Title
 
-# Contents
+## Usage (Repository)
 
-## Installation
+### Prerequisites:
+- Python >= 3.8.10 
 
-### Prerequisites
+- 0S >= Windows 7
 
-### Usage
+### Installation
+С uv (рекомендуется):
+    uv sync
 
-### TODO
+Без uv:
+    pip install -r requirements.txt
+    # requirements.txt сгенерирован из pyproject.toml, не редактировать вручную
 
-### help
+## Usage (Windows - exe)
+
+### Prerequisites:
+- Visual C++ 2015-2022
+
+- 0S >= Windows 7
+
+## TODO
+
+## help
