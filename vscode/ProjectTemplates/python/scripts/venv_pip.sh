@@ -109,7 +109,7 @@ if ! check_internet; then
     rm -rf .venv
 
     if [ -f "pyproject.toml" ]; then
-        uv sync --no-index $UV_CACHE_FLAG
+        uv sync --group build --no-index $UV_CACHE_FLAG
     elif [ -f "requirements.txt" ]; then
         uv venv
         uv pip install -r requirements.txt --no-index $UV_CACHE_FLAG
@@ -128,7 +128,7 @@ rm -rf .venv
 
 if [ -f "pyproject.toml" ]; then
     echo "Найден pyproject.toml — используем uv sync"
-    uv sync
+    uv sync --group build
 elif [ -f "requirements.txt" ]; then
     echo "Найден requirements.txt — используем uv pip install"
     uv venv
