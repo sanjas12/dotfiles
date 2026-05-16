@@ -2,26 +2,24 @@
 set -e
 set -u
 
-# поднимаемся на уровень 02_TG_NALADKA
-cd ../
-
-# Определяем директорию скрипта
+# Определяем директорию скрипта и корень проекта
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Путь к build.py
-BUILD_FILE="$SCRIPT_DIR/build.py"
+BUILD_FILE="$PROJECT_ROOT/build.py"
 
 # Проверка наличия build.py
 if [ ! -f "$BUILD_FILE" ]; then
-    echo "[ERROR] build.py не найден в $SCRIPT_DIR"
+    echo "[ERROR] build.py не найден в $PROJECT_ROOT"
     exit 1
 fi
 
-# Папка сборки и лог
-BUILD_DIR="$SCRIPT_DIR/build"
+# Папка сборки
+BUILD_DIR="$PROJECT_ROOT/build"
 
 # ── Запекаем git-ревизию ────────────────────────────────────────────────────
-REVISION_FILE="$SCRIPT_DIR/src/_revision.py"
+REVISION_FILE="$PROJECT_ROOT/src/_revision.py"
 
 if git rev-list --count HEAD > /dev/null 2>&1; then
     GIT_COUNT=$(git rev-list --count HEAD)
@@ -38,8 +36,6 @@ EOF
 
 echo "Записан: $REVISION_FILE"
 
-# export APP_GIT_REVISION="rev${GIT_COUNT}"
-
 # Чистим старую сборку
 if [ -d "$BUILD_DIR" ]; then
     echo "Cleaning previous build..."
@@ -51,10 +47,10 @@ fi
 # Создаём папку для лога заранее (rm -rf её удалил)
 mkdir -p "$BUILD_DIR"
 
-# Запуск сборки — вывод идёт и в терминал, и в лог
+# Запуск сборки
 echo "Building package..."
-cd "$SCRIPT_DIR"    
-python build.py build -q
+cd "$PROJECT_ROOT"
+"$PROJECT_ROOT/.venv/Scripts/python.exe" build.py build -q
 
 if [ -f "$REVISION_FILE" ]; then
     rm "$REVISION_FILE"
@@ -62,4 +58,4 @@ if [ -f "$REVISION_FILE" ]; then
 fi
 
 echo "Build completed successfully."
-find "$BUILD_DIR" -type d -name "TG_NALADKA.*" -print       
+find "$BUILD_DIR" -type d -name "TG_NALADKA.*" -print
