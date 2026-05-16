@@ -2,6 +2,15 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SPECIAL_FOLDERS=("Python" "Obsidian")
+LOG_FILE="$SCRIPT_DIR/update_repo_on_flash.log"
+
+# Всё что идёт дальше — пишется и в консоль, и в лог-файл
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+echo ""
+echo "=================================================="
+echo "[START] $(date '+%Y-%m-%d %H:%M:%S')"
+echo "=================================================="
 
 process_folder() {
     local folder_path="$1"
@@ -97,3 +106,5 @@ done
 
 echo ""
 echo "All done!"
+echo "[END] $(date '+%Y-%m-%d %H:%M:%S')"
+echo "=================================================="
