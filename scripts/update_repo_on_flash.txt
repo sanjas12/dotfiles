@@ -1,0 +1,164 @@
+# Подробный разбор кода
+
+## Общая идея
+
+Скрипт **параллельно обновляет несколько Git-репозиториев** (выполняет `git pull`) в папках `Python` и `Obsidian`, которые лежат рядом со скриптом.
+
+---
+
+## Импорты
+
+```python
+import subprocess        # Запуск внешних команд (git pull)
+from pathlib import Path # Удобная работа с путями к файлам/папкам
+from concurrent.futures import ThreadPoolExecutor, as_completed  # Параллельность
+from typing import Tuple, List  # Подсказки типов
+```
+
+---
+
+## Функция `update_repo` — обновление одного репозитория
+
+```python
+def update_repo(repo_path: Path) -> Tuple[str, bool, str]:
+```
+
+Принимает путь к репозиторию, возвращает **кортеж из трёх значений**: `(имя_папки, успех, сообщение)`.
+
+### Запуск git pull
+
+```python
+result = subprocess.run(
+    ["git", "pull"],       # Команда которую выполняем
+    cwd=repo_path,         # Рабочая директория — папка репозитория
+    capture_output=True,   # Перехватываем stdout и stderr
+    text=True,             # Вывод как строки, а не байты
+    timeout=60,            # Убиваем процесс если завис больше 60 сек
+)
+```
+
+### Анализ результата
+
+| Ситуация | Что возвращается |
+|---|---|
+| Успех (`returncode == 0`) | `(имя, True, текст вывода)` |
+| Ошибка git (`returncode ≠ 0`) | `(имя, False, текст ошибки)` |
+| Таймаут | `(имя, False, "Timeout after 60 seconds")` |
+| Любое другое исключение | `(имя, False, текст исключения)` |
+
+---
+
+## Функция `process_folder` — обработка папки
+
+```python
+def process_folder(folder_path: Path, prefixes: List[str] = None, max_workers: int = 4):
+```
+
+### Шаг 1 — поиск репозиториев
+
+```python
+for item in folder_path.iterdir():                      # Перебираем всё в папке
+    if item.is_dir() and (item / ".git").is_dir():      # Это Git-репозиторий?
+        if prefixes and not any(item.name.startswith(p) for p in prefixes):
+            continue                                     # Не подходит — пропускаем
+        repos.append(item)
+```
+
+Git-репозиторий определяется просто: если внутри папки есть подпапка `.git` — это репозиторий.
+
+Фильтрация по префиксам работает так:
+
+```python
+any(item.name.startswith(p) for p in prefixes)
+# Для prefixes=["0","1","2","3"] и папки "02_oop":
+# "02_oop".startswith("0") → True  ✅ папка подходит
+# "02_oop".startswith("1") → False
+# "02_oop".startswith("2") → False
+# "02_oop".startswith("3") → False
+
+# Для папки "homework":
+# "homework".startswith("0") → False
+# "homework".startswith("1") → False
+# "homework".startswith("2") → False
+# "homework".startswith("3") → False ❌ папка пропускается
+```
+
+### Шаг 2 — параллельный запуск
+
+```python
+with ThreadPoolExecutor(max_workers=4) as executor:
+    futures = {executor.submit(update_repo, repo): repo for repo in repos}
+```
+
+`ThreadPoolExecutor` создаёт пул из **4 потоков**. Каждый `executor.submit(...)` ставит задачу в очередь и возвращает `Future` — объект-обещание результата в будущем. Все задачи запускаются **одновременно**.
+
+```python
+for future in as_completed(futures):
+    name, success, message = future.result()
+```
+
+`as_completed` отдаёт фьючеры **по мере завершения** — быстрый репозиторий выведется раньше медленного.
+
+### Шаг 3 — вывод статистики
+
+```python
+print(f"📊 {folder_path.name}: {success_count}/{len(repos)} successful")
+```
+
+В конце показывает сколько репозиториев обновилось успешно.
+
+---
+
+## Функция `main` — точка входа
+
+```python
+def main():
+    script_dir = Path(__file__).parent   # Папка где лежит сам скрипт
+
+    process_folder(script_dir / "Python", prefixes=["0", "1", "2", "3"])
+    process_folder(script_dir / "Obsidian")
+```
+
+Скрипт ищет репозитории **рядом с собой**:
+
+```
+update.py
+├── Python/
+│   ├── 01_basics/    ✅ начинается с "0"
+│   ├── 12_django/    ✅ начинается с "1"
+│   ├── 23_async/     ✅ начинается с "2"
+│   ├── 34_tests/     ✅ начинается с "3"
+│   └── homework/     ❌ пропускается
+└── Obsidian/
+    ├── notes/        ✅ все папки
+    └── journal/      ✅ все папки
+```
+
+---
+
+## Полная схема работы
+
+```
+main()
+  │
+  ├─► process_folder("Python", prefixes=["0","1","2","3"])
+  │     │
+  │     ├─ Ищет папки с .git внутри
+  │     ├─ Фильтрует по префиксам 0,1,2,3
+  │     │
+  │     └─ ThreadPoolExecutor (4 потока)
+  │           ├── поток 1: git pull → 01_basics  ─┐
+  │           ├── поток 2: git pull → 12_django   │ параллельно
+  │           ├── поток 3: git pull → 23_async    │
+  │           └── поток 4: git pull → 34_tests   ─┘
+  │                 └── выводит результаты по мере готовности
+  │
+  └─► process_folder("Obsidian")
+        └─ то же самое, но без фильтрации — все репозитории
+```
+
+---
+
+## Почему параллельность здесь эффективна
+
+`git pull` — это **сетевая операция**: скрипт большую часть времени просто **ждёт ответа сервера**. Потоки в это время не тратят ресурсы CPU, поэтому 4 потока дают почти 4-кратное ускорение по сравнению с последовательным обновлением.
