@@ -37,7 +37,7 @@ process_folder() {
     # Собираем список репозиториев внутри папки
     local repos=()
     for item in "$folder_path"/*/; do
-        [ -d "$item/.git" ] || continue
+        [ -d "$item" ] || continue
 
         # Применяем префиксы если заданы
         if [ -n "$prefixes" ]; then
@@ -53,7 +53,15 @@ process_folder() {
             [ $match -eq 1 ] || continue
         fi
 
-        repos+=("$item")
+        if [ -d "$item/.git" ]; then
+            repos+=("$item")
+        else
+            # Подпапка без .git — ищем репозитории внутри неё
+            for subitem in "$item"/*/; do
+                [ -d "$subitem/.git" ] || continue
+                repos+=("$subitem")
+            done
+        fi
     done
 
     if [ ${#repos[@]} -eq 0 ]; then
@@ -81,8 +89,8 @@ process_folder() {
     echo "[STAT] $(basename "$folder_path"): $success_count/${#repos[@]} successful"
 }
 
-# Обрабатываем Python (папки начинающиеся с 0, 1, 2, 3)
-process_folder "$SCRIPT_DIR/Python" "0 1 2 3"
+# Обрабатываем Python (все папки, включая подпапки)
+process_folder "$SCRIPT_DIR/Python"
 
 # Обрабатываем Obsidian (все папки)
 process_folder "$SCRIPT_DIR/Obsidian"
