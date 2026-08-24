@@ -46,6 +46,8 @@ log_info "Log файл: $LOG_FILE"
 # ─── Кодировка ────────────────────────────────────────────────
 export PYTHONIOENCODING=utf-8
 export PYTHONUTF8=1
+# На Windows uv иногда не может создавать hardlink между кэшем и проектом.
+export UV_LINK_MODE=copy
 
 # ─── Git: переключаемся на master ─────────────────────────────
 echo ""
@@ -91,7 +93,6 @@ if ! uv run --frozen pytest tests/unit tests/integration tests/gui; then
     log_error "Тесты не прошли! Релиз отменён."
     exit 1
 fi
-log_ok "Все тесты прошли успешно"
 log_ok "Все тесты прошли успешно"
 
 # ─── Коммиты с последнего релиза ──────────────────────────────
@@ -187,7 +188,15 @@ esac
 verify_versions() {
     local expected=$1
 
-    VER_TOML=$(grep '^version = ' pyproject.toml | awk -F'"' '{print $2}')
+    VER_TOML=$(awk '
+        /^\[tool\.commitizen\]$/ { in_commitizen = 1; next }
+        /^\[/ { in_commitizen = 0 }
+        in_commitizen && /^version = / {
+            split($0, parts, "\"")
+            print parts[2]
+            exit
+        }
+    ' pyproject.toml)
     VER_PY=$(grep '__version__' src/_version.py | head -1 | awk -F'"' '{print $2}')
 
     log_info "Проверка версий после bump:"
@@ -205,13 +214,21 @@ verify_versions() {
     fi
 }
 
-NEW_VERSION=$(grep '^version = ' pyproject.toml | awk -F'"' '{print $2}')
+NEW_VERSION=$(git describe --tags --exact-match HEAD 2>/dev/null || true)
+if [ -z "$NEW_VERSION" ]; then
+    log_error "После bump на текущем коммите не найден релизный тег."
+    exit 1
+fi
 verify_versions "$NEW_VERSION"
 
 # ─── Push ─────────────────────────────────────────────────────
 log_info "Пушим в remote"
-if ! git push origin master && git push origin --tags; then
-    log_error "Не удалось выполнить git push"
+if ! git push origin master; then
+    log_error "Не удалось отправить ветку master"
+    exit 1
+fi
+if ! git push origin --tags; then
+    log_error "Не удалось отправить релизные теги"
     exit 1
 fi
 
