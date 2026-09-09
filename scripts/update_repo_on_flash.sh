@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || exit 1
+ROOT_DIR="${1:-$SCRIPT_DIR}"
 SPECIAL_FOLDERS=("Python" "Obsidian")
 LOG_FILE="$SCRIPT_DIR/update_repo_on_flash.log"
-exec > >(tee "$LOG_FILE") 2>&1
+# The foreground pipeline at the end waits until tee has written all output.
+# Append so a later failed run does not erase earlier diagnostics.
+if ! command -v tee >/dev/null 2>&1; then
+    printf '[ERR] tee not found. Run this script using Git Bash or Bash.\n' >&2
+    exit 1
+fi
+if ! : >> "$LOG_FILE"; then
+    printf '[ERR] Cannot write log: %s\n' "$LOG_FILE" >&2
+    exit 1
+fi
 
 total_ok=0 total_err=0 total_locks=0 total_dirty=0
 
@@ -93,3 +103,137 @@ clear_stale_lock() {
     fi
     return 1
 }
+
+update_repo() {
+    local repo name status output attempt pull_log
+    local pull_codes=()
+    repo=$(cd "$1" && pwd -P) || {
+        printf '[ERR] Cannot access repository: %s\n' "$1"
+        total_err=$((total_err + 1))
+        return
+    }
+    name=$(basename "$repo")
+    if status=$(cd "$repo" && GIT_OPTIONAL_LOCKS=0 git status --porcelain --untracked-files=normal 2>&1); then
+        if [[ -n "$status" ]]; then
+            total_dirty=$((total_dirty + 1))
+            printf '[DIRTY] %s: local changes/untracked files; attempting normal pull\n' "$name"
+            printf '%s\n' "$status"
+        fi
+    else
+        printf '[WARN] %s: cannot check working tree: %s\n' "$name" "$status"
+    fi
+    for attempt in 1 2; do
+        printf '[PULL] %s: attempt %s\n' "$name" "$attempt"
+        pull_log=$(mktemp) || {
+            printf '[ERR] %s: cannot create temporary diagnostics file\n' "$name"
+            total_err=$((total_err + 1))
+            return
+        }
+        (cd "$repo" && LC_ALL=C git pull) 2>&1 | tee "$pull_log"
+        pull_codes=("${PIPESTATUS[@]}")
+        output=$(cat "$pull_log")
+        rm -- "$pull_log"
+        if (( pull_codes[1] != 0 )); then
+            printf '[ERR] %s: could not capture pull diagnostics\n' "$name"
+            total_err=$((total_err + 1))
+            return
+        fi
+        if (( pull_codes[0] == 0 )); then
+            total_ok=$((total_ok + 1))
+            printf '[OK] %s: pull completed\n' "$name"
+            return
+        fi
+        if (( attempt == 1 )) && clear_stale_lock "$repo" "$output" "$name"; then
+            continue
+        fi
+        total_err=$((total_err + 1))
+        printf '[ERR] %s: pull failed (attempt %s); diagnostics above\n' "$name" "$attempt"
+        return
+    done
+}
+
+print_stats() {
+    printf '[STAT] %s: successful=%s errors=%s locks_cleared=%s dirty=%s\n' "$@"
+}
+
+process_folder() {
+    local folder_path="$1" prefixes="${2:-}"
+    local before_ok=$total_ok before_err=$total_err before_locks=$total_locks before_dirty=$total_dirty
+    local item subitem name match p repo
+    local repos=()
+    if [[ ! -d "$folder_path" ]]; then
+        printf '[ERR] Folder not found: %s\n' "$folder_path"
+        print_stats "$(basename "$folder_path") (missing folder)" 0 0 0 0
+        return
+    fi
+    # Preserve the original self / child / grandchild traversal and prefixes.
+    if [[ -d "$folder_path/.git" ]]; then
+        repos+=("$folder_path")
+    else
+        for item in "$folder_path"/*/; do
+            [[ -d "$item" ]] || continue
+            if [[ -n "$prefixes" ]]; then
+                name=$(basename "$item")
+                match=0
+                for p in $prefixes; do
+                    if [[ "$name" == "$p"* ]]; then match=1; break; fi
+                done
+                (( match == 1 )) || continue
+            fi
+            if [[ -d "$item/.git" ]]; then
+                repos+=("$item")
+            else
+                for subitem in "$item"/*/; do
+                    [[ -d "$subitem/.git" ]] || continue
+                    repos+=("$subitem")
+                done
+            fi
+        done
+    fi
+    printf '\n[DIR] Processing %s (%s repos)\n' "$(basename "$folder_path")" "${#repos[@]}"
+    if (( ${#repos[@]} == 0 )); then
+        printf '[WARN] No Git repositories found in %s\n' "$folder_path"
+    fi
+    for repo in "${repos[@]}"; do update_repo "$repo"; done
+    print_stats "$(basename "$folder_path")" "$((total_ok-before_ok))" "$((total_err-before_err))" \
+        "$((total_locks-before_locks))" "$((total_dirty-before_dirty))"
+}
+
+main() {
+printf '\n==================================================\n[START] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')"
+printf '[INFO] Script: %s\n[INFO] Root: %s\n[INFO] Log: %s\n' "${BASH_SOURCE[0]}" "$ROOT_DIR" "$LOG_FILE"
+local dependency
+for dependency in git mktemp cat rm stat ps uname date; do
+    if ! command -v "$dependency" >/dev/null 2>&1; then
+        printf '[ERR] Required command not found: %s\n' "$dependency"
+        return 1
+    fi
+done
+if [[ ! -d "$ROOT_DIR" ]]; then
+    printf '[ERR] Root folder not found: %s\n' "$ROOT_DIR"
+    return 1
+fi
+process_folder "$ROOT_DIR/Python"
+process_folder "$ROOT_DIR/Obsidian"
+for folder in "$ROOT_DIR"/*/; do
+    [[ -d "$folder" ]] || continue
+    name=$(basename "$folder")
+    skip=0
+    for special in "${SPECIAL_FOLDERS[@]}"; do
+        if [[ "$name" == "$special" ]]; then skip=1; break; fi
+    done
+    (( skip == 1 )) && continue
+    process_folder "$folder"
+done
+print_stats 'TOTAL' "$total_ok" "$total_err" "$total_locks" "$total_dirty"
+printf '[END] %s\n==================================================\n' "$(date '+%Y-%m-%d %H:%M:%S')"
+(( total_err == 0 ))
+}
+
+main 2>&1 | tee -a "$LOG_FILE"
+run_codes=("${PIPESTATUS[@]}")
+if (( run_codes[1] != 0 )); then
+    printf '[ERR] Writing log failed: %s\n' "$LOG_FILE" >&2
+    exit 1
+fi
+exit "${run_codes[0]}"
