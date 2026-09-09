@@ -15,7 +15,7 @@ if ! : >> "$LOG_FILE"; then
     exit 1
 fi
 
-total_ok=0 total_err=0 total_locks=0 total_dirty=0
+total_ok=0 total_err=0 total_locks=0 total_dirty=0 total_skip=0
 
 # Return 0 only if a complete process snapshot contains no Git processes.
 # Conservative across repositories: cwd alone cannot identify git -C, --git-dir,
@@ -105,7 +105,8 @@ clear_stale_lock() {
 }
 
 update_repo() {
-    local repo name status output attempt pull_log
+    local repo name status output attempt pull_log branch setting value config_rc
+    local upstream_missing=0
     local pull_codes=()
     repo=$(cd "$1" && pwd -P) || {
         printf '[ERR] Cannot access repository: %s\n' "$1"
@@ -116,11 +117,34 @@ update_repo() {
     if status=$(cd "$repo" && GIT_OPTIONAL_LOCKS=0 git status --porcelain --untracked-files=normal 2>&1); then
         if [[ -n "$status" ]]; then
             total_dirty=$((total_dirty + 1))
-            printf '[DIRTY] %s: local changes/untracked files; attempting normal pull\n' "$name"
+            printf '[DIRTY] %s: local changes/untracked files detected\n' "$name"
             printf '%s\n' "$status"
         fi
     else
         printf '[WARN] %s: cannot check working tree: %s\n' "$name" "$status"
+    fi
+    # Check configuration, not whether the remote-tracking ref exists locally.
+    # A configured but deleted/unfetched upstream must still go through pull.
+    if branch=$(cd "$repo" && git symbolic-ref --quiet --short HEAD 2>/dev/null); then
+        for setting in remote merge; do
+            if value=$(cd "$repo" && git config --get "branch.$branch.$setting" 2>&1); then
+                [[ -n "$value" ]] || upstream_missing=1
+            else
+                config_rc=$?
+                if (( config_rc == 1 )); then
+                    upstream_missing=1
+                else
+                    printf '[ERR] %s: cannot read upstream configuration: %s\n' "$name" "$value"
+                    total_err=$((total_err + 1))
+                    return
+                fi
+            fi
+        done
+        if (( upstream_missing == 1 )); then
+            total_skip=$((total_skip + 1))
+            printf '[SKIP] %s: branch %s has no configured upstream; pull skipped\n' "$name" "$branch"
+            return
+        fi
     fi
     for attempt in 1 2; do
         printf '[PULL] %s: attempt %s\n' "$name" "$attempt"
@@ -153,17 +177,18 @@ update_repo() {
 }
 
 print_stats() {
-    printf '[STAT] %s: successful=%s errors=%s locks_cleared=%s dirty=%s\n' "$@"
+    printf '[STAT] %s: successful=%s errors=%s locks_cleared=%s dirty=%s skipped=%s\n' "$@"
 }
 
 process_folder() {
     local folder_path="$1" prefixes="${2:-}"
     local before_ok=$total_ok before_err=$total_err before_locks=$total_locks before_dirty=$total_dirty
+    local before_skip=$total_skip
     local item subitem name match p repo
     local repos=()
     if [[ ! -d "$folder_path" ]]; then
         printf '[ERR] Folder not found: %s\n' "$folder_path"
-        print_stats "$(basename "$folder_path") (missing folder)" 0 0 0 0
+        print_stats "$(basename "$folder_path") (missing folder)" 0 0 0 0 0
         return
     fi
     # Preserve the original self / child / grandchild traversal and prefixes.
@@ -196,7 +221,7 @@ process_folder() {
     fi
     for repo in "${repos[@]}"; do update_repo "$repo"; done
     print_stats "$(basename "$folder_path")" "$((total_ok-before_ok))" "$((total_err-before_err))" \
-        "$((total_locks-before_locks))" "$((total_dirty-before_dirty))"
+        "$((total_locks-before_locks))" "$((total_dirty-before_dirty))" "$((total_skip-before_skip))"
 }
 
 main() {
@@ -225,7 +250,7 @@ for folder in "$ROOT_DIR"/*/; do
     (( skip == 1 )) && continue
     process_folder "$folder"
 done
-print_stats 'TOTAL' "$total_ok" "$total_err" "$total_locks" "$total_dirty"
+print_stats 'TOTAL' "$total_ok" "$total_err" "$total_locks" "$total_dirty" "$total_skip"
 printf '[END] %s\n==================================================\n' "$(date '+%Y-%m-%d %H:%M:%S')"
 (( total_err == 0 ))
 }
