@@ -1,6 +1,16 @@
-cd ~/Project/dotfiles/vscode
-# chmod 777 copy_set_lin.sh
+#!/usr/bin/env bash
 
-# cp ./settings.json ~/                     # work for  ubuntu
-cp ./settings.json ~/.config/Code/User/     # work for xubuntu
-cp ./keybindings.json ~/.config/Code/User/
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VSCODE_DIR="$HOME/.config/Code/User"
+
+echo "Каталог скрипта: $SCRIPT_DIR"
+echo "Каталог VS Code: $VSCODE_DIR"
+
+mkdir -p "$VSCODE_DIR"
+
+cp "$SCRIPT_DIR/settings.json" "$VSCODE_DIR/settings.json"
+cp "$SCRIPT_DIR/keybindings.json" "$VSCODE_DIR/keybindings.json"
+
+echo "Настройки VS Code успешно скопированы."
