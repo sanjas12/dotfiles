@@ -26,8 +26,8 @@
 # Проверка процессов не исключает их последующий запуск: во время очистки
 # не запускайте параллельные Git-операции, в том числе из IDE.
 #
-# Вывод работы и ошибки идут в консоль и дописываются в
-# update_repo_on_flash.log рядом со скриптом; прежние записи сохраняются.
+# Вывод работы и ошибки идут в консоль и записываются в
+# update_repo_on_flash.log рядом со скриптом; каждый запуск перезаписывает лог.
 # Если открыть лог невозможно, сообщение об этом выводится только в консоль.
 # [STAT] показывает итоги по каждой папке и TOTAL: successful, errors,
 # locks_cleared, dirty, skipped. Dirty учитывается независимо от исхода pull.
@@ -39,12 +39,12 @@ ROOT_DIR="${1:-$SCRIPT_DIR}"
 SPECIAL_FOLDERS=("Python" "Obsidian")
 LOG_FILE="$SCRIPT_DIR/update_repo_on_flash.log"
 # The foreground pipeline at the end waits until tee has written all output.
-# Append so a later failed run does not erase earlier diagnostics.
+# Start a fresh log for every run.
 if ! command -v tee >/dev/null 2>&1; then
     printf '[ERR] tee not found. Run this script using Git Bash or Bash.\n' >&2
     exit 1
 fi
-if ! : >> "$LOG_FILE"; then
+if ! : > "$LOG_FILE"; then
     printf '[ERR] Cannot write log: %s\n' "$LOG_FILE" >&2
     exit 1
 fi
@@ -289,7 +289,7 @@ printf '[END] %s\n==================================================\n' "$(date 
 (( total_err == 0 ))
 }
 
-main 2>&1 | tee -a "$LOG_FILE"
+main 2>&1 | tee "$LOG_FILE"
 run_codes=("${PIPESTATUS[@]}")
 if (( run_codes[1] != 0 )); then
     printf '[ERR] Writing log failed: %s\n' "$LOG_FILE" >&2
