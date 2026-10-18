@@ -42,3 +42,6 @@ htmlcov/
 test_faults.db
 
 # Project
+logs/
+.ruff_cache/
+.uv-cache/
