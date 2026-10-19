@@ -2,13 +2,21 @@
 
 # версия: 0.1
 
-# Назначение: полностью подготавливает окружение разработки проекта.
-# Скрипт удаляет существующую .venv, создаёт её заново, устанавливает runtime-,
-# dev- и build-зависимости, а затем устанавливает Git hooks pre-commit.
-# Поддерживает uv и fallback на pip, а также онлайн- и офлайн-установку из
-# локального каталога python_Library на дисках D, E или F.
-# Ход выполнения и ошибки записываются в каталог logs/.
-# ВАЖНО: запуск удаляет текущую .venv вместе с установленными в ней пакетами.
+# Назначение: пересоздаёт окружение разработки в Windows (Git Bash) и Linux (Bash).
+# Запуск из любой папки: bash /путь/к/проекту/scripts/recreate_env.sh.
+# Выбирает доступный Python 3: PYTHON_BIN, затем python3, python или python.exe,
+# без ограничения младшей версии. Совместимость кода и зависимостей определяется
+# отдельно конфигурацией проекта. PYTHON_BIN позволяет задать свой интерпретатор.
+# Проверяет доступ к PyPI и наличие файлов зависимостей до удаления старой .venv.
+# Затем создаёт .venv через uv либо выбранный Python и устанавливает зависимости:
+# uv использует pyproject.toml с группами dev/build, fallback на pip — requirements.txt.
+# Устанавливает Git hooks pre-commit, если репозиторий и инструмент доступны.
+# Для офлайн-установки принимает путь через LOCAL_PACKAGES_DIR; если он не задан,
+# ищет каталог /d/temp/python_Library, /e/temp/python_Library или /f/temp/python_Library.
+# Учитывает пути окружения Scripts/ в Windows и bin/ в Linux.
+# На Ubuntu для fallback через pip может потребоваться пакет python3-venv.
+# Ход выполнения и ошибки записываются в каталог logs/ в корне проекта.
+# ВАЖНО: после предварительных проверок удаляет текущую .venv со всеми её пакетами.
 
 # uv + интернет → uv sync (если есть pyproject.toml) или uv pip install -r requirements.txt
 # uv + офлайн → uv sync --no-index --find-links=... или uv pip install --no-index
@@ -90,17 +98,33 @@ activate_venv() {
     fi
 }
 
+# Быбор python в зависимости от OS
+select_python() {
+    local candidate
+    for candidate in "${PYTHON_BIN:-}" python3 python python.exe; do
+        [ -n "$candidate" ] || continue
+        if command -v "$candidate" >/dev/null 2>&1 &&
+            "$candidate" -c 'import sys; sys.exit(sys.version_info.major != 3)' >/dev/null 2>&1; then
+            # Use the base interpreter: the current .venv may be removed below.
+            PYTHON_BIN=$("$candidate" -c 'import sys; print(getattr(sys, "_base_executable", sys.executable))')
+            if command -v cygpath >/dev/null 2>&1; then
+                PYTHON_BIN=$(cygpath -u "$PYTHON_BIN")
+            fi
+            return 0
+        fi
+    done
+    log_error "Python 3 не найден. Установите python3 (Linux) или Python 3 (Windows)."
+    exit 1
+}
+
 # Проверка интернета
 check_internet() {
-    if command -v python >/dev/null 2>&1; then
-        python -c "import urllib.request; urllib.request.urlopen('https://pypi.org/simple/', timeout=3)" 2>/dev/null && return 0
-    fi
-
-    return 1
+    "$PYTHON_BIN" -c "import urllib.request; urllib.request.urlopen('https://pypi.org/simple/', timeout=3)" 2>/dev/null
 }
 
 # --- CONFIG ---
 PIP_VERSION="25.0.1"
+select_python
 
 log "=== НАЧАЛО BOOTSTRAP ==="
 log "Лог-файл: $LOG_FILE"
@@ -108,8 +132,9 @@ log "Корень проекта: $PROJECT_ROOT"
 log "Директория бэкенда: $BACKEND_DIR"
 
 # Поиск LOCAL_PACKAGES_DIR на дисках D, E, F
-LOCAL_PACKAGES_DIR=""
+LOCAL_PACKAGES_DIR="${LOCAL_PACKAGES_DIR:-}"
 for drive in d e f; do
+    [ -z "$LOCAL_PACKAGES_DIR" ] || break
     candidate="/$drive/temp/python_Library"
     if [[ -d "$candidate" ]]; then
         LOCAL_PACKAGES_DIR="$candidate"
@@ -121,11 +146,6 @@ done
 if [[ -z "$LOCAL_PACKAGES_DIR" ]]; then
     log_warning "Локальный каталог python_Library не найден ни на одном из дисков (d/e/f)"
 fi
-
-# --- CLEAN ---
-log "Удаляем старые .venv ..."
-rm -rf .venv "$BACKEND_DIR/.venv"
-log_success ".venv удалены"
 
 # --- DETECT UV ---
 if command -v uv >/dev/null 2>&1; then
@@ -204,7 +224,7 @@ install_with_uv() {
         cd "$BACKEND_DIR"
 
         log "Создание виртуального окружения..."
-        uv venv
+        uv venv --python "$PYTHON_BIN"
         log_success "Виртуальное окружение создано в $BACKEND_DIR/.venv"
 
         UV_ARGS=(--group build --group dev)
@@ -221,7 +241,7 @@ install_with_uv() {
         cd "$work_dir"
 
         log "Создание виртуального окружения в $work_dir..."
-        uv venv
+        uv venv --python "$PYTHON_BIN"
         log_success "Виртуальное окружение создано"
 
         local req_basename="$(basename "$REQUIREMENTS_FILE")"
@@ -249,26 +269,34 @@ install_with_pip() {
     cd "$work_dir"
 
     log "Создание виртуального окружения в $work_dir..."
-    python3 -m venv .venv || python -m venv .venv
+    if ! "$PYTHON_BIN" -m venv .venv; then
+        log_error "Cannot create .venv. On Ubuntu install the venv package matching your Python (e.g. python3-venv)."
+        exit 1
+    fi
     log_success "Виртуальное окружение создано"
 
     activate_venv ".venv"
+    if [ -f "$work_dir/.venv/Scripts/python.exe" ]; then
+        VENV_PYTHON="$work_dir/.venv/Scripts/python.exe"
+    else
+        VENV_PYTHON="$work_dir/.venv/bin/python"
+    fi
 
     # обновление pip
     log "Обновление pip до версии $PIP_VERSION..."
-    python -m pip install "${PIP_ARGS[@]}" --upgrade pip=="$PIP_VERSION"
+    "$VENV_PYTHON" -m pip install "${PIP_ARGS[@]}" --upgrade pip=="$PIP_VERSION"
     log_success "Pip обновлен"
 
-    if python -m pip install --help | grep -q -- "--dry-run"; then
+    if "$VENV_PYTHON" -m pip install --help | grep -q -- "--dry-run"; then
         log "Выполнение dry-run..."
-        pip install "${PIP_ARGS[@]}" -r "$REQUIREMENTS_FILE" --dry-run
+        "$VENV_PYTHON" -m pip install "${PIP_ARGS[@]}" -r "$REQUIREMENTS_FILE" --dry-run
         log_success "Dry-run выполнен"
     else
         log_warning "pip без --dry-run, пропускаем проверку"
     fi
 
     log "Установка зависимостей из $REQUIREMENTS_FILE..."
-    pip install "${PIP_ARGS[@]}" -r "$REQUIREMENTS_FILE"
+    "$VENV_PYTHON" -m pip install "${PIP_ARGS[@]}" -r "$REQUIREMENTS_FILE"
     log_success "Зависимости установлены через pip"
 
     cd "$PROJECT_ROOT"
@@ -304,6 +332,16 @@ install_hooks() {
 # RUN
 # ─────────────────────────────────────────────────────────────────────────────
 START_TIME=$(date +%s)
+
+# PROJECT_ROOT is resolved from this script's parent; remove only its own venv.
+VENV_TO_REMOVE="$PROJECT_ROOT/.venv"
+if [ -z "$PROJECT_ROOT" ] || [ "$PROJECT_ROOT" = "/" ] || [ "$BACKEND_DIR" != "$PROJECT_ROOT" ]; then
+    log_error "Unexpected virtual environment path; refusing cleanup."
+    exit 1
+fi
+log "Удаляем окружение: $VENV_TO_REMOVE"
+rm -rf -- "$VENV_TO_REMOVE"
+log_success ".venv удалена"
 
 if [ $HAS_UV -eq 1 ]; then
     install_with_uv
