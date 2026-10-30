@@ -13,7 +13,7 @@
 	st = status
 	lg = log --oneline --graph --decorate --all \
   --date=format:'%Y-%m-%d %H:%M:%S' \
-  --pretty=format:'%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(auto)%d%C(reset) %s'
+  --pretty=format:'%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(auto)%d%C(reset) %s' -n 10
   	cnv = commit --no-verify -m
 	ac = !git add . && git commit --no-verify -m
 	acnv = !git add . && git commit --no-verify -m
